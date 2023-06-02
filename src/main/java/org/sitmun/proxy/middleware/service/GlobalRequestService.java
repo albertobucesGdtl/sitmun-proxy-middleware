@@ -5,7 +5,7 @@ import org.sitmun.proxy.middleware.decorator.response.ResponseDecorator;
 import org.sitmun.proxy.middleware.dto.DatasourcePayloadDto;
 import org.sitmun.proxy.middleware.dto.OgcWmsPayloadDto;
 import org.sitmun.proxy.middleware.dto.PayloadDto;
-import org.sitmun.proxy.middleware.request.GlobalRequest;
+import org.sitmun.proxy.middleware.request.RemoteRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GlobalRequestService {
+public class GlobalRequestService  {
 
   @Autowired
   private List<RequestDecorator> requestDecorators;
@@ -22,21 +22,22 @@ public class GlobalRequestService {
   private List<ResponseDecorator> responseDecorators;
 
   public ResponseEntity<?> executeRequest(PayloadDto payload) {
-    GlobalRequest globalRequest = new GlobalRequest();
+    RemoteRequest remoteRequest ;
     if (payload instanceof OgcWmsPayloadDto) {
-      globalRequest.setMapServiceRequest();
-      globalRequest.getCustomHttpRequest().getRequestBuilder()
-        .url(((OgcWmsPayloadDto) payload).getUri());
+      String url = ((OgcWmsPayloadDto) payload).getUri();
+      remoteRequest = new OgcWmsRequest().setUrl(url);
     } else if (payload instanceof DatasourcePayloadDto) {
-      globalRequest.setDatabaseRequest();
+      remoteRequest = new JdbcDatabaseRequest();
+    } else {
+      throw new RuntimeException("Payload type not supported: "+payload.getClass().getName());
     }
-    applyRequestDecorators(globalRequest, payload);
-    ResponseEntity<?> response = globalRequest.execute();
+    applyRequestDecorators(remoteRequest, payload);
+    ResponseEntity<?> response = remoteRequest.execute();
     applyResponseDecorators(response);
     return response;
   }
 
-  private void applyRequestDecorators(GlobalRequest globalRequest, PayloadDto payload) {
+  private void applyRequestDecorators(RemoteRequest globalRequest, PayloadDto payload) {
     requestDecorators.forEach(d -> {
       if (d.accept(payload)) {
         d.apply(globalRequest, payload);

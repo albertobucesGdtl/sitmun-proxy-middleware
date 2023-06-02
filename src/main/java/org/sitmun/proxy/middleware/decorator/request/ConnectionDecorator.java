@@ -2,7 +2,7 @@ package org.sitmun.proxy.middleware.decorator.request;
 
 import org.sitmun.proxy.middleware.dto.DatasourcePayloadDto;
 import org.sitmun.proxy.middleware.dto.PayloadDto;
-import org.sitmun.proxy.middleware.request.GlobalRequest;
+import org.sitmun.proxy.middleware.service.JdbcDatabaseRequest;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -10,7 +10,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Component
-public class ConnectionDecorator implements RequestDecorator {
+public class ConnectionDecorator implements RequestDecorator<JdbcDatabaseRequest, DatasourcePayloadDto> {
 
   @Override
   public boolean accept(PayloadDto payload) {
@@ -18,8 +18,8 @@ public class ConnectionDecorator implements RequestDecorator {
   }
 
   @Override
-  public void apply(GlobalRequest globalRequest, PayloadDto payload) {
-    globalRequest.getJdbcRequest().setConnection(getConnection((DatasourcePayloadDto) payload));
+  public void apply(JdbcDatabaseRequest globalRequest, DatasourcePayloadDto payload) {
+    globalRequest.setConnection(getConnection(payload));
   }
 
   private Connection getConnection(DatasourcePayloadDto datasourcePayload) {

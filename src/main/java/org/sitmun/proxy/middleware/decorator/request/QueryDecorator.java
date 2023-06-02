@@ -2,11 +2,11 @@ package org.sitmun.proxy.middleware.decorator.request;
 
 import org.sitmun.proxy.middleware.dto.DatasourcePayloadDto;
 import org.sitmun.proxy.middleware.dto.PayloadDto;
-import org.sitmun.proxy.middleware.request.GlobalRequest;
+import org.sitmun.proxy.middleware.service.JdbcDatabaseRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class QueryDecorator implements RequestDecorator {
+public class QueryDecorator implements RequestDecorator<JdbcDatabaseRequest, DatasourcePayloadDto> {
 
   @Override
   public boolean accept(PayloadDto payload) {
@@ -14,8 +14,8 @@ public class QueryDecorator implements RequestDecorator {
   }
 
   @Override
-  public void apply(GlobalRequest globalRequest, PayloadDto payload) {
-    globalRequest.getJdbcRequest().setSql(((DatasourcePayloadDto) payload).getSql());
+  public void apply(JdbcDatabaseRequest globalRequest, DatasourcePayloadDto payload) {
+    globalRequest.setSql(payload.getSql());
   }
 
 }

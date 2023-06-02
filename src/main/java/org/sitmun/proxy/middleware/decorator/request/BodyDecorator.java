@@ -2,11 +2,11 @@ package org.sitmun.proxy.middleware.decorator.request;
 
 import org.sitmun.proxy.middleware.dto.OgcWmsPayloadDto;
 import org.sitmun.proxy.middleware.dto.PayloadDto;
-import org.sitmun.proxy.middleware.request.GlobalRequest;
+import org.sitmun.proxy.middleware.service.OgcWmsRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BodyDecorator implements RequestDecorator {
+public class BodyDecorator implements RequestDecorator<OgcWmsRequest, OgcWmsPayloadDto> {
 
   @Override
   public boolean accept(PayloadDto payload) {
@@ -20,7 +20,7 @@ public class BodyDecorator implements RequestDecorator {
   }
 
   @Override
-  public void apply(GlobalRequest globalRequest, PayloadDto payload) {
+  public void apply(OgcWmsRequest globalRequest, OgcWmsPayloadDto payload) {
     // TODO Valid implementation
     //Example
 /*		OgcWmsPayloadDto ogcPayload = (OgcWmsPayloadDto) payload;		
