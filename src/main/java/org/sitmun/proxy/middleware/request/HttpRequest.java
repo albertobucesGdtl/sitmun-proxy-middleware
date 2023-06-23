@@ -65,9 +65,8 @@ public class HttpRequest implements DecoratedRequest {
       parameters.keySet().forEach(k -> uri.append(k).append("=").append(parameters.get(k)).append("&"));
       uri.deleteCharAt(uri.length() - 1);
       return uri.toString();
-    } else {
-      return url;
     }
+    return url;
   }
 
   public void setUrl(String uri) {

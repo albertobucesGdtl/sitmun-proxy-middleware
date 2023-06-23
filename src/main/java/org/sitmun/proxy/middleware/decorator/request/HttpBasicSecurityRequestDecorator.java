@@ -19,9 +19,8 @@ public class HttpBasicSecurityRequestDecorator implements RequestDecorator {
       return ctx.getSecurity() != null
         && StringUtils.hasText(ctx.getSecurity().getUsername())
         && StringUtils.hasText(ctx.getSecurity().getPassword());
-    } else {
-      return false;
     }
+    return false;
   }
 
   @Override
