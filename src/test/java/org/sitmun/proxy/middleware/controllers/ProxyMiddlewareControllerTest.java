@@ -36,7 +36,7 @@ class ProxyMiddlewareControllerTest {
 
   @BeforeAll
   void setup() {
-    this.token = TestUtils.requestAuthorization(restTemplate);
+    token = TestUtils.requestAuthorization(restTemplate);
   }
 
   /**
@@ -76,7 +76,7 @@ class ProxyMiddlewareControllerTest {
   void publicWmsOtherUser() throws Exception {
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/4").concat(
         "?SERVICE=WMS&VERSION=1.1.0&REQUEST=GetMap&FORMAT=image%2Fpng&TRANSPARENT=true&LAYERS=DTE50_MUN&SRS=EPSG%3A4326&BBOX=2.1358108520507812,41.37616450732182,2.1797561645507812,41.39986165460519&styles=&width=256&height=256"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(header().string("Content-Type", MediaType.IMAGE_PNG_VALUE));
   }
 
@@ -93,7 +93,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the value of hasSize to the appropriate one.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/2").concat(
         "?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typeNames=namespace:layerName&outputFormat=application/json"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(jsonPath("$.features", hasSize(25)));
   }
 
@@ -140,7 +140,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Adapt the parameters to align with the corresponding service.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/3").concat(
         "?REQUEST=GetMap&FORMAT=image/png&LAYERS=DT50_MUN&WIDTH=256&HEIGHT=256&SRS=EPSG:25830&BBOX=519828.9837386483,4110600.554306189,519894.9813798326,4110666.5519473734"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(header().string("Content-Type", MediaType.IMAGE_PNG_VALUE));
   }
 
@@ -157,7 +157,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the value of hasSize to the appropriate one.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/4").concat(
         "?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typeNames=namespace:layerName&outputFormat=application/json"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(jsonPath("$.features", hasSize(25)));
   }
 
@@ -204,7 +204,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Adapt the parameters to align with the corresponding service.
     // TODO: Change the content to the corresponding username:password values.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/3").concat("?REQUEST=GetCapabilities&VERSION=1.3.0"))
-        .header("Authorization", this.token)).andExpect(status().isOk())
+        .header("Authorization", token)).andExpect(status().isOk())
       .andExpect(content().string("userServ:passwordServ"));
   }
 
@@ -221,7 +221,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the content to the corresponding username:password values.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/6").concat(
         "?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typeNames=namespace:layerName&outputFormat=application/json"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(content().string("userServ:passwordServ"));
   }
 
@@ -274,7 +274,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the content to the corresponding username:password values.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/7").concat(
         "?REQUEST=GetMap&FORMAT=image/png&LAYERS=nombreLayer&WIDTH=256&HEIGHT=256&SRS=EPSG:25830&BBOX=519828.9837386483,4110600.554306189,519894.9813798326,4110666.5519473734"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(content().string("userServ:passwordServ"));
   }
 
@@ -293,7 +293,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the content to the corresponding username:password values.
     mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/GEO/8").concat(
         "?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&typeNames=namespace:layerName&outputFormat=application/json"))
-        .header("Authorization", this.token))
+        .header("Authorization", token))
       .andExpect(status().isOk()).andExpect(content().string("userServ:passwordServ"));
   }
 
@@ -463,7 +463,7 @@ class ProxyMiddlewareControllerTest {
   void jdbcAccessOtherUser() throws Exception {
     // TODO: Replace the task ID with one that requires Sitmun authentication.
     // TODO: Change the value of hasSize to the appropriate one.
-    mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/SQL/3279")).header("Authorization", this.token))
+    mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/SQL/3279")).header("Authorization", token))
       .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
   }
 
@@ -477,7 +477,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the task ID to one that accepts filters for a public sitmun user.
     // TODO: Add filters to the request
     // TODO: Change the value of hasSize to the appropriate one.
-    mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/SQL/3279")).header("Authorization", this.token))
+    mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/SQL/3279")).header("Authorization", token))
       .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
   }
 
@@ -491,7 +491,7 @@ class ProxyMiddlewareControllerTest {
     // TODO: Change the task ID to one that accepts filters for a authenticated sitmun user.
     // TODO: Add filters to the request
     // TODO: Change the value of hasSize to the appropriate one.
-    mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/SQL/3279")).header("Authorization", this.token))
+    mvc.perform(get(URIConstants.PROXY_URI.concat("1/0/SQL/3279")).header("Authorization", token))
       .andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(3)));
   }
 

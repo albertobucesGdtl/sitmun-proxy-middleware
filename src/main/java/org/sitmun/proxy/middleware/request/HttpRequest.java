@@ -49,7 +49,9 @@ public class HttpRequest implements DecoratedRequest {
 
     try (okhttp3.Response r = clientService.executeRequest(httpRequest)) {
       ResponseBody body = r.body();
-      if (body == null) return new Response<>(r.code(), r.header("content-type"), null);
+      if (body == null) {
+        return new Response<>(r.code(), r.header("content-type"), null);
+      }
       return new Response<>(r.code(), r.header("content-type"), body.bytes());
     } catch (IOException e) {
       log.error("Error getting response: {}", e.getMessage(), e);

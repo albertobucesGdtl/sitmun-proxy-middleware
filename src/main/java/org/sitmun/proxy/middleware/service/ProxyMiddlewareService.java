@@ -58,7 +58,7 @@ public class ProxyMiddlewareService {
 
   private ResponseEntity<?> configRequest(ConfigProxyRequest configRequest) {
     HttpHeaders requestHeaders = new HttpHeaders();
-    requestHeaders.add("X-SITMUN-Proxy-Key", this.secret);
+    requestHeaders.add("X-SITMUN-Proxy-Key", secret);
     HttpEntity<ConfigProxyRequest> httpEntity = new HttpEntity<>(configRequest, requestHeaders);
     try {
       return restTemplate.exchange(configUrl, HttpMethod.POST, httpEntity, ConfigProxyDto.class);
