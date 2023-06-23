@@ -27,10 +27,10 @@ public class GlobalRequestService {
   public <T> ResponseEntity<T> executeRequest(Context context) {
     lastContext = context;
     DecoratedRequest request = requestFactory.create(context);
-    requestDecorators.forEach(d -> d.apply(request, context));
+    requestDecorators.forEach(decorator -> decorator.apply(request, context));
     lastRequest = request;
     DecoratedResponse<T> response = request.execute();
-    responseDecorators.forEach(d -> d.apply(response, context));
+    responseDecorators.forEach(decorator -> decorator.apply(response, context));
     lastResponse = response;
     return response.asResponseEntity();
   }

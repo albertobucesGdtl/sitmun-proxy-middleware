@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 public class PaginationResponseDecorator implements ResponseDecorator {
 
   @Override
-  public boolean accept(Object target, Context response) {
+  public boolean accept(Object target, Context context) {
     // TODO return MediaType.APPLICATION_JSON.equals(response.getHeaders().getContentType());
     return false;
   }
 
   @Override
-  public void addBehavior(Object response, Context context) {
+  public void addBehavior(Object target, Context context) {
     //TODO  implementation if necessary
   }
 

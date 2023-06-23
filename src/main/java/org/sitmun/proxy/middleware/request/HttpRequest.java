@@ -43,7 +43,7 @@ public class HttpRequest implements DecoratedRequest {
     okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
 
     builder.url(getUrl());
-    headers.keySet().forEach(k -> builder.addHeader(k, headers.get(k)));
+    headers.keySet().forEach(key -> builder.addHeader(key, headers.get(key)));
 
     okhttp3.Request httpRequest = builder.build();
 

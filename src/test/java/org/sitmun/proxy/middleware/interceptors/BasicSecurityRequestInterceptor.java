@@ -16,10 +16,10 @@ public class BasicSecurityRequestInterceptor implements TestInterceptor {
 
   @NotNull
   @Override
-  public Response intercept(Chain arg0) throws IOException {
-    Request request = arg0.request();
+  public Response intercept(Chain chain) throws IOException {
+    Request request = chain.request();
     String authorization = request.header("Authorization");
-    Response response = arg0.proceed(request);
+    Response response = chain.proceed(request);
     if (authorization != null && authorization.startsWith("Basic")) {
       String token = decodeAuthorization(authorization);
       ResponseBody body = ResponseBody.create(token, MediaType.get("application/json"));
