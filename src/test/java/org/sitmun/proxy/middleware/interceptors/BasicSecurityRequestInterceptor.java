@@ -21,19 +21,11 @@ public class BasicSecurityRequestInterceptor implements TestInterceptor {
     String authorization = request.header("Authorization");
     Response response = chain.proceed(request);
     if (authorization != null && authorization.startsWith("Basic")) {
-      String token = decodeAuthorization(authorization);
+      String token = new String(Base64.getDecoder().decode(authorization.substring(6)));
       ResponseBody body = ResponseBody.create(token, MediaType.get("application/json"));
       response = response.newBuilder().body(body).code(200).build();
     }
     return response;
-  }
-
-  private static String decodeAuthorization(String authorization) {
-    String token = null;
-    if (StringUtils.hasText(authorization)) {
-      token = new String(Base64.getDecoder().decode(authorization.substring(6)));
-    }
-    return token;
   }
 
 }

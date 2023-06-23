@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class ProxyMiddlewareService {
   }
 
   public ResponseEntity<?> doRequest(Integer appId, Integer terId, String type,
-                                     Integer typeId, String token, Map<String, String> params) {
+                                     Integer typeId, @Nullable String token, Map<String, String> params) {
     ConfigProxyRequest configProxyRequest = new ConfigProxyRequest(appId, terId, type, typeId, "GET", params, null, token);
     logAsPrettyJson(log, "Request to the API:\n{}", configProxyRequest);
 

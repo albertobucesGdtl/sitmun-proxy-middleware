@@ -5,6 +5,8 @@ import org.sitmun.proxy.middleware.decorator.DecoratedResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import javax.annotation.Nullable;
+
 @Data
 public class Response<T> implements DecoratedResponse<T> {
 
@@ -12,7 +14,7 @@ public class Response<T> implements DecoratedResponse<T> {
   private final String contentType;
   private final T body;
 
-  public Response(int statusCode, String contentType, T body) {
+  public Response(int statusCode, @Nullable String contentType, @Nullable T body) {
     this.statusCode = statusCode;
     this.contentType = contentType;
     this.body = body;
@@ -20,10 +22,14 @@ public class Response<T> implements DecoratedResponse<T> {
 
   @Override
   public ResponseEntity<T> asResponseEntity() {
-    return ResponseEntity
-      .status(statusCode)
-      .contentType(MediaType.parseMediaType(contentType))
-      .body(body);
+    ResponseEntity.BodyBuilder response = ResponseEntity.status(statusCode);
+    if (contentType != null) {
+      response = response.contentType(MediaType.parseMediaType(contentType));
+    }
+    if (body != null) {
+      return response.body(body);
+    }
+    return response.build();
   }
 }
 

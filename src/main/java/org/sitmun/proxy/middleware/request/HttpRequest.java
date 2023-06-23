@@ -47,12 +47,13 @@ public class HttpRequest implements DecoratedRequest {
 
     okhttp3.Request httpRequest = builder.build();
 
-    try (okhttp3.Response r = clientService.executeRequest(httpRequest)) {
-      ResponseBody body = r.body();
+    try (okhttp3.Response response = clientService.executeRequest(httpRequest)) {
+      ResponseBody body = response.body();
+      String contentType = response.header("content-type");
       if (body == null) {
-        return new Response<>(r.code(), r.header("content-type"), null);
+        return new Response<>(response.code(), contentType, null);
       }
-      return new Response<>(r.code(), r.header("content-type"), body.bytes());
+      return new Response<>(response.code(), contentType, body.bytes());
     } catch (IOException e) {
       log.error("Error getting response: {}", e.getMessage(), e);
       return new Response<>(500, "application/json", new ErrorResponseDTO(500, "ServiceError", "Error with the request to final service", "", new Date()));
@@ -62,7 +63,7 @@ public class HttpRequest implements DecoratedRequest {
   public String getUrl() {
     if (!parameters.isEmpty()) {
       StringBuilder uri = new StringBuilder(url).append('?');
-      parameters.forEach((key, value) -> uri.append(key).append("=").append(value).append("&"));
+      parameters.forEach((key, value) -> uri.append(key).append('=').append(value).append('&'));
       uri.deleteCharAt(uri.length() - 1);
       return uri.toString();
     }
