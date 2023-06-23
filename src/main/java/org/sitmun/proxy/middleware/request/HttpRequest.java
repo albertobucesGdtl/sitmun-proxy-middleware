@@ -43,7 +43,7 @@ public class HttpRequest implements DecoratedRequest {
     okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
 
     builder.url(getUrl());
-    headers.keySet().forEach(key -> builder.addHeader(key, headers.get(key)));
+    headers.forEach(builder::addHeader);
 
     okhttp3.Request httpRequest = builder.build();
 
@@ -62,7 +62,7 @@ public class HttpRequest implements DecoratedRequest {
   public String getUrl() {
     if (!parameters.isEmpty()) {
       StringBuilder uri = new StringBuilder(url).append('?');
-      parameters.keySet().forEach(k -> uri.append(k).append("=").append(parameters.get(k)).append("&"));
+      parameters.forEach((key, value) -> uri.append(key).append("=").append(value).append("&"));
       uri.deleteCharAt(uri.length() - 1);
       return uri.toString();
     }

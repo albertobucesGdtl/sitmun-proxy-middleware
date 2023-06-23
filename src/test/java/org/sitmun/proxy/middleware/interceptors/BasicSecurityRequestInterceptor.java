@@ -28,7 +28,7 @@ public class BasicSecurityRequestInterceptor implements TestInterceptor {
     return response;
   }
 
-  private String decodeAuthorization(String authorization) {
+  private static String decodeAuthorization(String authorization) {
     String token = null;
     if (StringUtils.hasText(authorization)) {
       token = new String(Base64.getDecoder().decode(authorization.substring(6)));

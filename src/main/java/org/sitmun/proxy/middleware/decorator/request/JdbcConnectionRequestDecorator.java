@@ -28,7 +28,7 @@ public class JdbcConnectionRequestDecorator implements RequestDecorator {
     request.setConnection(getConnection(jdbcContext));
   }
 
-  private Connection getConnection(JdbcContext context) {
+  private static Connection getConnection(JdbcContext context) {
     // TODO Reuse connections from a connection pool when possible
     Connection connection = null;
     try {
