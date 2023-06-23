@@ -6,7 +6,6 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.Base64;
