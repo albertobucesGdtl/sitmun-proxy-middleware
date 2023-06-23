@@ -5,7 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 
-public class LoggerUtils {
+public final class LoggerUtils {
+
+  private LoggerUtils() {
+    throw new IllegalStateException("Utility class");
+  }
+
   @SneakyThrows(JsonProcessingException.class)
   public static void logAsPrettyJson(Logger log, String msg, Object object) {
     ObjectMapper mapper = new ObjectMapper();
