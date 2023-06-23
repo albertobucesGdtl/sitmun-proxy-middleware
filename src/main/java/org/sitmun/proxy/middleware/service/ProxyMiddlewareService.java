@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class ProxyMiddlewareService {
   }
 
   public ResponseEntity<?> doRequest(Integer appId, Integer terId, String type,
-                                     Integer typeId, String token, Map<String, String> params) {
+                                     Integer typeId, @Nullable String token, Map<String, String> params) {
     ConfigProxyRequest configProxyRequest = new ConfigProxyRequest(appId, terId, type, typeId, "GET", params, null, token);
     logAsPrettyJson(log, "Request to the API:\n{}", configProxyRequest);
 
@@ -47,18 +48,16 @@ public class ProxyMiddlewareService {
 
       if (configProxyDto != null) {
         return globalRequestService.executeRequest(configProxyDto.getPayload());
-      } else {
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO(401, "Bad Request", "Request not valid", configUrl, new Date());
-        return ResponseEntity.status(401).body(errorResponse);
       }
-    } else {
-      return response;
+      ErrorResponseDTO errorResponse = new ErrorResponseDTO(401, "Bad Request", "Request not valid", configUrl, new Date());
+      return ResponseEntity.status(401).body(errorResponse);
     }
+    return response;
   }
 
   private ResponseEntity<?> configRequest(ConfigProxyRequest configRequest) {
     HttpHeaders requestHeaders = new HttpHeaders();
-    requestHeaders.add("X-SITMUN-Proxy-Key", this.secret);
+    requestHeaders.add("X-SITMUN-Proxy-Key", secret);
     HttpEntity<ConfigProxyRequest> httpEntity = new HttpEntity<>(configRequest, requestHeaders);
     try {
       return restTemplate.exchange(configUrl, HttpMethod.POST, httpEntity, ConfigProxyDto.class);

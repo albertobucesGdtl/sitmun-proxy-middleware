@@ -43,14 +43,17 @@ public class HttpRequest implements DecoratedRequest {
     okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
 
     builder.url(getUrl());
-    headers.keySet().forEach(k -> builder.addHeader(k, headers.get(k)));
+    headers.forEach(builder::addHeader);
 
     okhttp3.Request httpRequest = builder.build();
 
-    try (okhttp3.Response r = clientService.executeRequest(httpRequest)) {
-      ResponseBody body = r.body();
-      if (body == null) return new Response<>(r.code(), r.header("content-type"), null);
-      return new Response<>(r.code(), r.header("content-type"), body.bytes());
+    try (okhttp3.Response response = clientService.executeRequest(httpRequest)) {
+      ResponseBody body = response.body();
+      String contentType = response.header("content-type");
+      if (body == null) {
+        return new Response<>(response.code(), contentType, null);
+      }
+      return new Response<>(response.code(), contentType, body.bytes());
     } catch (IOException e) {
       log.error("Error getting response: {}", e.getMessage(), e);
       return new Response<>(500, "application/json", new ErrorResponseDTO(500, "ServiceError", "Error with the request to final service", "", new Date()));
@@ -60,12 +63,11 @@ public class HttpRequest implements DecoratedRequest {
   public String getUrl() {
     if (!parameters.isEmpty()) {
       StringBuilder uri = new StringBuilder(url).append('?');
-      parameters.keySet().forEach(k -> uri.append(k).append("=").append(parameters.get(k)).append("&"));
+      parameters.forEach((key, value) -> uri.append(key).append('=').append(value).append('&'));
       uri.deleteCharAt(uri.length() - 1);
       return uri.toString();
-    } else {
-      return url;
     }
+    return url;
   }
 
   public void setUrl(String uri) {

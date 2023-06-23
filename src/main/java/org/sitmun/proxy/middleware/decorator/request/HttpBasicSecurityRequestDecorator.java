@@ -19,9 +19,8 @@ public class HttpBasicSecurityRequestDecorator implements RequestDecorator {
       return ctx.getSecurity() != null
         && StringUtils.hasText(ctx.getSecurity().getUsername())
         && StringUtils.hasText(ctx.getSecurity().getPassword());
-    } else {
-      return false;
     }
+    return false;
   }
 
   @Override
@@ -33,7 +32,7 @@ public class HttpBasicSecurityRequestDecorator implements RequestDecorator {
     request.setHeader("Authorization", "Basic ".concat(authEncode));
   }
 
-  private String encodeAuthorization(String authorization) {
+  private static String encodeAuthorization(String authorization) {
     return Base64.getEncoder().encodeToString(authorization.getBytes());
   }
 }

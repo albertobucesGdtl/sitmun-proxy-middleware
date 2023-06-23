@@ -7,6 +7,7 @@ import org.sitmun.proxy.middleware.decorator.RequestDecorator;
 import org.sitmun.proxy.middleware.request.JdbcRequest;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,7 +29,8 @@ public class JdbcConnectionRequestDecorator implements RequestDecorator {
     request.setConnection(getConnection(jdbcContext));
   }
 
-  private Connection getConnection(JdbcContext context) {
+  @Nullable
+  private static Connection getConnection(JdbcContext context) {
     // TODO Reuse connections from a connection pool when possible
     Connection connection = null;
     try {

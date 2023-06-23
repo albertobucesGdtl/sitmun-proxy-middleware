@@ -19,10 +19,10 @@ public class RequestFactory {
   public DecoratedRequest create(Context context) {
     if (context instanceof HttpContext) {
       return new HttpRequest(clientService);
-    } else if (context instanceof JdbcContext) {
-      return new JdbcRequest();
-    } else {
-      throw new IllegalArgumentException("Payload type not supported");
     }
+    if (context instanceof JdbcContext) {
+      return new JdbcRequest();
+    }
+    throw new IllegalArgumentException("Payload type not supported");
   }
 }

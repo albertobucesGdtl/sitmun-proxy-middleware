@@ -14,9 +14,8 @@ public class HttpUriDecorator implements RequestDecorator {
     if (context instanceof HttpContext) {
       HttpContext httpContext = (HttpContext) context;
       return httpContext.getParameters() != null && !httpContext.getParameters().isEmpty();
-    } else {
-      return false;
     }
+    return false;
   }
 
   @Override

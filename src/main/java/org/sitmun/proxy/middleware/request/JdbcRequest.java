@@ -6,7 +6,9 @@ import org.sitmun.proxy.middleware.decorator.DecoratedRequest;
 import org.sitmun.proxy.middleware.decorator.DecoratedResponse;
 import org.sitmun.proxy.middleware.dto.ErrorResponseDTO;
 import org.sitmun.proxy.middleware.response.Response;
+import org.springframework.http.MediaType;
 
+import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.Date;
 import java.util.*;
@@ -14,10 +16,11 @@ import java.util.*;
 @Slf4j
 public class JdbcRequest implements DecoratedRequest {
 
+  @Nullable
   private Connection connection;
   private String sql;
 
-  public void setConnection(Connection connection) {
+  public void setConnection(@Nullable Connection connection) {
     this.connection = connection;
   }
 
@@ -28,13 +31,16 @@ public class JdbcRequest implements DecoratedRequest {
   @Override
   public DecoratedResponse<?> execute() {
     List<Map<String, Object>> result = new ArrayList<>();
+    if (connection == null) {
+      return new Response<>(500, MediaType.APPLICATION_JSON_VALUE, new ErrorResponseDTO(500, "ConnectionError", "Connection is null", "", new Date()));
+    }
     try (Connection connectionUsed = connection) {
       executeStatement(connectionUsed, result);
     } catch (SQLException e) {
       log.error("Error getting response: {}", e.getMessage(), e);
-      return new Response<>(500, "application/json", new ErrorResponseDTO(500, "SQLError", e.getMessage(), "", new Date()));
+      return new Response<>(500, MediaType.APPLICATION_JSON_VALUE, new ErrorResponseDTO(500, "SQLError", e.getMessage(), "", new Date()));
     }
-    return new Response<>(200, "application/json", result);
+    return new Response<>(200, MediaType.APPLICATION_JSON_VALUE, result);
   }
 
   private void executeStatement(Connection connection, List<Map<String, Object>> result) {
